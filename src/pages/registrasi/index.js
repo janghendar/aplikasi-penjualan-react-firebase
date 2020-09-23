@@ -35,6 +35,8 @@ function Registrasi() {
         ulangi_password: ''
     })
 
+    const [isSubmitting, setSubmitting] = useState (false);
+
     const {auth} = useFirebase();
 
     const handleChange = e => {
@@ -76,11 +78,11 @@ function Registrasi() {
         e.preventDefault();
         const findErrors = validate();
 
-        if (Object.keys(findErrors).some(err => err !== '')) {
+        if (Object.values(findErrors).some(err => err !== '')) {
             setError(findErrors);
         }else{
             try{
-
+                setSubmitting(true);
                 await
                 auth.createUserWithEmailAndPassword(form.email,form.password)
             }catch(e){
@@ -94,8 +96,19 @@ function Registrasi() {
                         newError.email = 'email tidak valid';
                         break;
                     case 'auth/weak-password' :
-                        newError.password = 'passsword anda terlalu lemah'
+                        newError.password = 'passsword anda terlalu lemah';
+                        break;
+                    case 'auth/operation-not-allowed' :
+                        newError.email = 'Metode Email dan Password tidak didukung'; 
+                        break;
+                    default:
+                        newError.email = 'Terjadi kesalahan silahkan coba lagi';
+                    break;
+                    
                 }
+
+                setError(newError);
+                setSubmitting(false);
             }
 
         }
@@ -122,6 +135,7 @@ function Registrasi() {
                     onChange={handleChange}
                     helperText={error.email}
                     error={error.email?true:false}
+                    disabled={isSubmitting}
 
 
                 />
@@ -137,6 +151,7 @@ function Registrasi() {
                     onChange={handleChange}
                     helperText={error.password}
                     error={error.password?true:false}
+                    disabled={isSubmitting}
 
                 />
                 <TextField
@@ -151,12 +166,14 @@ function Registrasi() {
                     onChange={handleChange}
                     helperText={error.ulangi_password}
                     error={error.ulangi_password?true:false}
+                    disabled={isSubmitting}
 
                 />
 
                 <Grid container className={classes.buttons}>
                     <Grid item xs>
                         <Button
+                            disabled={isSubmitting}
                             type="submit"
                             color="primary"
                             variant="contained"
@@ -167,6 +184,7 @@ function Registrasi() {
 
                     <Grid>
                         <Button
+                            disabled={isSubmitting}
                             component={Link}
                             variant="contained"
                             size="large"
