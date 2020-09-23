@@ -1,6 +1,3 @@
-// 24-Halaman-regisstrasi-part-3
-// 05:37
-
 import React, { useState } from "react";
 
 // Import Komponen Material UI
@@ -21,6 +18,9 @@ import { Link, Redirect } from 'react-router-dom';
 
 // firebase Hook
 import {useFirebase} from '../../components/FirebaseProvider';
+
+// App Loading
+import AppLoading from "../../components/AppLoading";
 
 
 function Registrasi() {
@@ -118,8 +118,8 @@ function Registrasi() {
 
     }
 
-    if (loading) {
-        return <h1>Loading...</h1>
+    if (true) {
+        return <AppLoading/>
     }
 
     if (user) {
