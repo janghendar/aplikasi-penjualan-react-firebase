@@ -17,7 +17,7 @@ import isEmail from 'validator/lib/isEmail';
 import useStyles from "./styles";
 
 // Import dari React Dom
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 // firebase Hook
 import {useFirebase} from '../../components/FirebaseProvider';
@@ -40,7 +40,7 @@ function Registrasi() {
 
     const [isSubmitting, setSubmitting] = useState (false);
 
-    const {auth} = useFirebase();
+    const {auth, user, loading} = useFirebase();
 
     const handleChange = e => {
         setForm({
@@ -102,7 +102,7 @@ function Registrasi() {
                         newError.password = 'passsword anda terlalu lemah';
                         break;
                     case 'auth/operation-not-allowed' :
-                        newError.email = 'Metode Email dan Password tidak didukung'; 
+                        newError.email = 'Metode Email dan Password tidak didukung' 
                         break;
                     default:
                         newError.email = 'Terjadi kesalahan silahkan coba lagi';
@@ -117,7 +117,15 @@ function Registrasi() {
         }
 
     }
-    console.log(form)
+
+    if (loading) {
+        return <h1>Loading...</h1>
+    }
+
+    if (user) {
+        return <Redirect to="/" />
+    }
+    console.log(user)
     return <Container maxWidth="xs">
         <Paper className={classes.paper}>
             <Typography
